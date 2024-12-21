@@ -84,33 +84,67 @@ class CodeFormatter:
             print("")
             # 打印空行以分隔输出内容
 
-    def formatFile(self, fileName):
+      def formatFile(self, fileName):
+        """
+        使用指定的命令和参数格式化文件。
+
+        参数:
+            fileName (str): 要格式化的文件名。
+
+        返回:
+            bool: 如果发生错误，则返回True；否则返回False。
+        """
+        # 初始化命令列表，self.command可能是一个字符串，表示主命令
         commandList = [self.command]
+        # 将self.formatCommandArguments（可能是一个列表）中的参数添加到命令列表中
         commandList.extend(self.formatCommandArguments)
+        # 将文件名添加到命令列表的末尾
         commandList.append(fileName)
         try:
+            # 执行命令并捕获输出（如果有错误，输出将包括在stderr中并抛出异常）
             subprocess.check_output(commandList, stderr=subprocess.STDOUT)
+            # 如果命令成功执行，打印成功消息
             print("[OK] " + fileName)
+            # 如果没有异常，返回False表示成功
+            return False
         except subprocess.CalledProcessError as e:
+            # 如果命令执行失败，打印错误消息（包括命令的输出）
             cprint("[ERROR] " + fileName + " (" + e.output.rstrip('\r\n') + ")", "red")
+            # 返回True表示发生错误
             return True
-        return False
 
     def performGitDiff(self, fileName, verifyOutput):
+        """
+        使用git diff命令检查文件是否有更改，并与verifyOutput进行比较。
+
+        参数:
+            fileName (str): 要检查的文件名。
+            verifyOutput (bytes): 用于与git diff输出进行比较的数据。
+
+        返回:
+            tuple: 一个包含两个元素的元组，(bool, str)。
+                   bool表示是否发生错误，str是git diff的输出（如果没有错误则为空字符串）。
+        """
         try:
+            # 使用Popen启动git diff进程，并设置输入、输出和错误管道
             diffProcess = subprocess.Popen(
                 ["git", "diff", "--color=always", "--exit-code", "--no-index", "--", fileName, "-"],
-                                           stdin=subprocess.PIPE,
-                                           stdout=subprocess.PIPE,
-                                           stderr=subprocess.PIPE)
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
+            # 向进程发送数据（verifyOutput），并读取输出
             diffOutput, _ = diffProcess.communicate(verifyOutput)
+            # 如果git diff进程返回码为0，表示没有差异，将diffOutput设置为空字符串
             if diffProcess.returncode == 0:
                 diffOutput = ""
         except OSError:
+            # 如果无法运行git diff，打印错误消息
             cprint("[ERROR] Failed to run git diff on " + fileName, "red")
+            # 返回(True, "")表示发生错误且没有diff输出
             return (True, "")
+        # 返回(False, diffOutput)表示没有错误且可能有diff输出
         return (False, diffOutput)
-
     def verifyFile(self, fileName, printDiff):## 创建一个命令列表，以self.command开头，添加self.verifyCommandArguments中的元素，最后添加fileName
         commandList = [self.command]
         commandList.extend(self.verifyCommandArguments)
