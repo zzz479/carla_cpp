@@ -192,21 +192,58 @@ class CodeFormatterClang(CodeFormatter):
         self.checkedInClangFormatFile = os.path.join(self.scriptPath, CodeFormatterClang.CHECKED_IN_CLANG_FORMAT_FILE)
 
     def verifyFormatterVersion(self):
+        """
+        验证代码格式化器的版本是否与预期一致。
+
+        这个方法首先调用CodeFormatter类的静态方法verifyFormatterVersion来检查格式化器的版本，
+        然后调用实例方法verifyClangFormatFileExistsAndMatchesCheckedIn来验证.clang-format文件的存在和匹配性。
+        """
+        # 调用CodeFormatter类的静态方法来验证格式化器的版本
         CodeFormatter.verifyFormatterVersion(self)
+        # 验证.clang-format文件的存在性及其与检入版本的一致性
         self.verifyClangFormatFileExistsAndMatchesCheckedIn()
 
     def verifyCheckedInClangFormatFileExists(self):
+        """
+        验证检入的.clang-format文件是否存在。
+
+        参数:
+            无
+
+        返回:
+            无
+        """
+        # 检查指定的.clang-format文件是否存在
         if os.path.exists(self.checkedInClangFormatFile):
+            # 如果文件存在，则打印成功消息
             print("[OK] Found " + CodeFormatterClang.CHECKED_IN_CLANG_FORMAT_FILE + " file (the one that should be in a repository) " +
                   self.checkedInClangFormatFile)
         else:
+            # 如果文件不存在，则打印警告消息，并询问用户是否确认继续
             cprint("[WARN] Not found " + CodeFormatterClang.CHECKED_IN_CLANG_FORMAT_FILE + " file " +
                    self.checkedInClangFormatFile, "yellow")
             self.confirmWithUserClangFormatFileCantBeVerified()
 
     def confirmWithUserClangFormatFileCantBeVerified(self):
+        """
+        当用户确认.clang-format文件无法验证时，与用户进行确认。
+
+        如果用户没有通过命令行参数指定--yes（即self.args.yes为False），
+        则询问用户是否确定他们的.clang-format文件是最新的，并且他们想要继续。
+        如果用户回答不是'y'，则退出程序。
+
+        参数:
+            无
+
+        返回:
+            无（如果用户回答不是'y'，则通过sys.exit(1)退出程序）
+        """
+        # 检查用户是否通过命令行参数指定了--yes
         if not self.args.yes:
-            answer = raw_input("Are you sure your .clang-format file is up-to-date and you want to continue? (y/N)")
+            # 如果没有指定--yes，则询问用户是否确定要继续
+            # 注意：在Python 3中，raw_input()已被重命名为input()
+            answer = input("Are you sure your .clang-format file is up-to-date and you want to continue? (y/N)")
+            # 如果用户回答的不是'y'，则退出程序
             if answer != "y":
                 sys.exit(1)
 
