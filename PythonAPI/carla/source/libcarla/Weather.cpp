@@ -80,28 +80,30 @@ void export_weather() {//将WeatherParameters相关的类型、类等信息导�
 .def("__ne__", &cr::WeatherParameters::operator!=)
 
 // 为WeatherParameters类定义字符串表示方法
+// 将WeatherParameters类的字符串表示方法暴露给Python
 .def(self_ns::str(self_ns::self))
-  cls.attr("Default") = cr::WeatherParameters::Default;
-  cls.attr("ClearNoon") = cr::WeatherParameters::ClearNoon;
-  cls.attr("CloudyNoon") = cr::WeatherParameters::CloudyNoon;
-  cls.attr("WetNoon") = cr::WeatherParameters::WetNoon;
-  cls.attr("WetCloudyNoon") = cr::WeatherParameters::WetCloudyNoon;
-  cls.attr("MidRainyNoon") = cr::WeatherParameters::MidRainyNoon;
-  cls.attr("HardRainNoon") = cr::WeatherParameters::HardRainNoon;
-  cls.attr("SoftRainNoon") = cr::WeatherParameters::SoftRainNoon;
-  cls.attr("ClearSunset") = cr::WeatherParameters::ClearSunset;
-  cls.attr("CloudySunset") = cr::WeatherParameters::CloudySunset;
-  cls.attr("WetSunset") = cr::WeatherParameters::WetSunset;
-  cls.attr("WetCloudySunset") = cr::WeatherParameters::WetCloudySunset;
-  cls.attr("MidRainSunset") = cr::WeatherParameters::MidRainSunset;
-  cls.attr("HardRainSunset") = cr::WeatherParameters::HardRainSunset;
-  cls.attr("SoftRainSunset") = cr::WeatherParameters::SoftRainSunset;
-  cls.attr("ClearNight") = cr::WeatherParameters::ClearNight;
-  cls.attr("CloudyNight") = cr::WeatherParameters::CloudyNight;
-  cls.attr("WetNight") = cr::WeatherParameters::WetNight;
-  cls.attr("WetCloudyNight") = cr::WeatherParameters::WetCloudyNight;
-  cls.attr("SoftRainNight") = cr::WeatherParameters::SoftRainNight;
-  cls.attr("MidRainyNight") = cr::WeatherParameters::MidRainyNight;
-  cls.attr("HardRainNight") = cr::WeatherParameters::HardRainNight;
-  cls.attr("DustStorm") = cr::WeatherParameters::DustStorm;
-}
+
+// 将WeatherParameters类的静态成员作为Python类的属性
+cls.attr("Default") = cr::WeatherParameters::Default;          // 默认天气设置
+cls.attr("ClearNoon") = cr::WeatherParameters::ClearNoon;      // 晴朗正午
+cls.attr("CloudyNoon") = cr::WeatherParameters::CloudyNoon;    // 多云正午
+cls.attr("WetNoon") = cr::WeatherParameters::WetNoon;          // 湿润正午
+cls.attr("WetCloudyNoon") = cr::WeatherParameters::WetCloudyNoon; // 湿润多云正午
+cls.attr("MidRainyNoon") = cr::WeatherParameters::MidRainyNoon; // 中雨正午
+cls.attr("HardRainNoon") = cr::WeatherParameters::HardRainNoon; // 大雨正午
+cls.attr("SoftRainNoon") = cr::WeatherParameters::SoftRainNoon; // 小雨正午
+cls.attr("ClearSunset") = cr::WeatherParameters::ClearSunset;   // 晴朗日落
+cls.attr("CloudySunset") = cr::WeatherParameters::CloudySunset; // 多云日落
+cls.attr("WetSunset") = cr::WeatherParameters::WetSunset;       // 湿润日落
+cls.attr("WetCloudySunset") = cr::WeatherParameters::WetCloudySunset; // 湿润多云日落
+cls.attr("MidRainSunset") = cr::WeatherParameters::MidRainSunset; // 中雨日落
+cls.attr("HardRainSunset") = cr::WeatherParameters::HardRainSunset; // 大雨日落
+cls.attr("SoftRainSunset") = cr::WeatherParameters::SoftRainSunset; // 小雨日落
+cls.attr("ClearNight") = cr::WeatherParameters::ClearNight;      // 晴朗夜晚
+cls.attr("CloudyNight") = cr::WeatherParameters::CloudyNight;    // 多云夜晚
+cls.attr("WetNight") = cr::WeatherParameters::WetNight;          // 湿润夜晚
+cls.attr("WetCloudyNight") = cr::WeatherParameters::WetCloudyNight; // 湿润多云夜晚
+cls.attr("SoftRainNight") = cr::WeatherParameters::SoftRainNight; // 小雨夜晚
+cls.attr("MidRainyNight") = cr::WeatherParameters::MidRainyNight; // 中雨夜晚
+cls.attr("HardRainNight") = cr::WeatherParameters::HardRainNight; // 大雨夜晚
+cls.attr("DustStorm") = cr::WeatherParameters::DustStorm;         // 沙尘暴
