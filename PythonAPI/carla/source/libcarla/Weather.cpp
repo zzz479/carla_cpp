@@ -42,40 +42,45 @@ void export_weather() {//将WeatherParameters相关的类型、类等信息导�
   auto cls = class_<cr::WeatherParameters>("WeatherParameters")
      // 定义WeatherParameters类的构造函数，可接受多个默认参数，用于初始化WeatherParameters对象的各个天气参数
      // 参数分别对应不同的天气参数，如cloudiness、precipitation等，每个参数都有默认值，如cloudiness的默认值为0.0f
-    .def(init<float, float, float, float, float, float, float, float, float, float, float, float, float, float>(
-        (arg("cloudiness")=0.0f,
-         arg("precipitation")=0.0f,
-         arg("precipitation_deposits")=0.0f,
-         arg("wind_intensity")=0.0f,
-         arg("sun_azimuth_angle")=0.0f,
-         arg("sun_altitude_angle")=0.0f,
-         arg("fog_density")=0.0f,
-         arg("fog_distance")=0.0f,
-         arg("fog_falloff")=0.0f,
-         arg("wetness")=0.0f,
-         arg("scattering_intensity")=0.0f,
-         arg("mie_scattering_scale")=0.0f,
-         arg("rayleigh_scattering_scale")=0.0331f,
-         arg("dust_storm")=0.0f)))
-    .def_readwrite("cloudiness", &cr::WeatherParameters::cloudiness)
-    .def_readwrite("precipitation", &cr::WeatherParameters::precipitation)
-    .def_readwrite("precipitation_deposits", &cr::WeatherParameters::precipitation_deposits)
-    .def_readwrite("wind_intensity", &cr::WeatherParameters::wind_intensity)
-    .def_readwrite("sun_azimuth_angle", &cr::WeatherParameters::sun_azimuth_angle)
-    .def_readwrite("sun_altitude_angle", &cr::WeatherParameters::sun_altitude_angle)
-    .def_readwrite("fog_density", &cr::WeatherParameters::fog_density)
-    .def_readwrite("fog_distance", &cr::WeatherParameters::fog_distance)
-    .def_readwrite("fog_falloff", &cr::WeatherParameters::fog_falloff)
-    .def_readwrite("wetness", &cr::WeatherParameters::wetness)
-    .def_readwrite("scattering_intensity", &cr::WeatherParameters::scattering_intensity)
-    .def_readwrite("mie_scattering_scale", &cr::WeatherParameters::mie_scattering_scale)
-    .def_readwrite("rayleigh_scattering_scale", &cr::WeatherParameters::rayleigh_scattering_scale)
-    .def_readwrite("dust_storm", &cr::WeatherParameters::dust_storm)
-    .def("__eq__", &cr::WeatherParameters::operator==)
-    .def("__ne__", &cr::WeatherParameters::operator!=)
-    .def(self_ns::str(self_ns::self))
-  ;
+    // 定义一个构造函数，接受14个float类型的参数，每个参数都有默认值0.0f
+.def(init<float, float, float, float, float, float, float, float, float, float, float, float, float, float>(
+        (arg("cloudiness")=0.0f,           // 云量
+         arg("precipitation")=0.0f,        // 降水量
+         arg("precipitation_deposits")=0.0f, // 降水沉积量
+         arg("wind_intensity")=0.0f,       // 风力强度
+         arg("sun_azimuth_angle")=0.0f,    // 太阳方位角
+         arg("sun_altitude_angle")=0.0f,   // 太阳高度角
+         arg("fog_density")=0.0f,          // 雾密度
+         arg("fog_distance")=0.0f,         // 雾距离
+         arg("fog_falloff")=0.0f,          // 雾衰减
+         arg("wetness")=0.0f,              // 湿润度
+         arg("scattering_intensity")=0.0f, // 散射强度
+         arg("mie_scattering_scale")=0.0f, // Mie散射尺度
+         arg("rayleigh_scattering_scale")=0.0331f, // Rayleigh散射尺度
+         arg("dust_storm")=0.0f)))         // 沙尘暴强度
 
+// 为WeatherParameters类的成员变量定义读写接口
+.def_readwrite("cloudiness", &cr::WeatherParameters::cloudiness)              // 云量
+.def_readwrite("precipitation", &cr::WeatherParameters::precipitation)        // 降水量
+.def_readwrite("precipitation_deposits", &cr::WeatherParameters::precipitation_deposits) // 降水沉积量
+.def_readwrite("wind_intensity", &cr::WeatherParameters::wind_intensity)      // 风力强度
+.def_readwrite("sun_azimuth_angle", &cr::WeatherParameters::sun_azimuth_angle)// 太阳方位角
+.def_readwrite("sun_altitude_angle", &cr::WeatherParameters::sun_altitude_angle) // 太阳高度角
+.def_readwrite("fog_density", &cr::WeatherParameters::fog_density)            // 雾密度
+.def_readwrite("fog_distance", &cr::WeatherParameters::fog_distance)          // 雾距离
+.def_readwrite("fog_falloff", &cr::WeatherParameters::fog_falloff)            // 雾衰减
+.def_readwrite("wetness", &cr::WeatherParameters::wetness)                    // 湿润度
+.def_readwrite("scattering_intensity", &cr::WeatherParameters::scattering_intensity) // 散射强度
+.def_readwrite("mie_scattering_scale", &cr::WeatherParameters::mie_scattering_scale) // Mie散射尺度
+.def_readwrite("rayleigh_scattering_scale", &cr::WeatherParameters::rayleigh_scattering_scale) // Rayleigh散射尺度
+.def_readwrite("dust_storm", &cr::WeatherParameters::dust_storm)              // 沙尘暴强度
+
+// 为WeatherParameters类定义相等和不相等的比较操作符
+.def("__eq__", &cr::WeatherParameters::operator==)
+.def("__ne__", &cr::WeatherParameters::operator!=)
+
+// 为WeatherParameters类定义字符串表示方法
+.def(self_ns::str(self_ns::self))
   cls.attr("Default") = cr::WeatherParameters::Default;
   cls.attr("ClearNoon") = cr::WeatherParameters::ClearNoon;
   cls.attr("CloudyNoon") = cr::WeatherParameters::CloudyNoon;
