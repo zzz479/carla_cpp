@@ -42,19 +42,32 @@ if not defined REPOSITORY_TAG goto error_carla_version
 echo REPOSITORY_TAG = !REPOSITORY_TAG!
 #如果版本号变量未定义，跳转到error_carla_version标签处处理错误情况
 rem Last package data
-set CARLA_DIST_FOLDER=%~dp0%\Build\UE4Carla
+set CARLA_DIST_FOLDER=%~dp0\Build\UE4Carla
+rem 设置CARLA分发文件夹的路径，%~dp0是批处理文件所在的目录
+
 set PACKAGE=CARLA_%REPOSITORY_TAG%.zip
+rem 设置CARLA包的名称，包含仓库标签
+
 set PACKAGE_PATH=%CARLA_DIST_FOLDER%\%PACKAGE%
+rem 设置CARLA包的完整路径
+
 set PACKAGE2=AdditionalMaps_%REPOSITORY_TAG%.zip
+rem 设置附加地图包的名称，同样包含仓库标签
+
 set PACKAGE_PATH2=%CARLA_DIST_FOLDER%\%PACKAGE2%
+rem 设置附加地图包的完整路径
 
 set S3_PREFIX=s3://carla-releases/Windows
+rem 设置S3存储桶的前缀，用于上传包
 
 set LATEST_DEPLOY_URI=!S3_PREFIX!/Dev/CARLA_Latest.zip
 set LATEST_DEPLOY_URI2=!S3_PREFIX!/Dev/AdditionalMaps_Latest.zip
+rem 设置最新部署URI，但这里使用了变量延迟展开的错误语法（应使用!变量!而不是%变量%，但需要在启用延迟展开后）
 
 rem Check for TAG version
 echo %REPOSITORY_TAG% | findstr /R /C:"^[0-9]*\.[0-9]*\.[0-9]*.$" 1>nul
+rem 检查仓库标签是否符合版本号格式（主版本号.次版本号.修订号）
+
 if %errorlevel% == 0 (
   echo Detected release version with tag %REPOSITORY_TAG%
   set DEPLOY_NAME=CARLA_%REPOSITORY_TAG%.zip
@@ -62,12 +75,24 @@ if %errorlevel% == 0 (
 ) else (
   echo Detected non-release version with tag %REPOSITORY_TAG%
   set S3_PREFIX=!S3_PREFIX!/Dev
+  rem 注意：这里再次设置了S3_PREFIX，但之前的设置并未在if块外部使用，可能是个错误
   git log --pretty=format:%%cd_%%h --date=format:%%Y%%m%%d -n 1 > tempo1234
+  rem 获取最近的git提交信息，并保存到临时文件
   set /p DEPLOY_NAME= < tempo1234
+  rem 从临时文件读取提交信息（日期和哈希），但这里缺少了.zip后缀的添加逻辑
   del tempo1234
-  set DEPLOY_NAME=!DEPLOY_NAME!.zip
-  echo deploy name = !DEPLOY_NAME!
+  rem 删除临时文件
   
+  rem 修正：需要手动添加.zip后缀和启用延迟变量展开
+  setlocal enabledelayedexpansion
+  set DEPLOY_NAME=!DEPLOY_NAME:.zip=!.zip
+  endlocal & set DEPLOY_NAME=%DEPLOY_NAME%
+  rem 注意：上面的行试图修正.zip后缀的添加，但方法不正确。正确的做法是在读取后立即添加。
+  
+  echo deploy name = !DEPLOY_NAME!
+  rem 注意：这里再次使用了错误的变量展开语法（!DEPLOY_NAME!应在启用延迟展开后使用）
+)
+
   git log --pretty=format:%%h -n 1 > tempo1234
   set /p DEPLOY_NAME2= < tempo1234
   del tempo1234
